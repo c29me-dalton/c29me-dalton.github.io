@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+	{ 
+		display: inline-block;
+		width:100px ;
+		height: 100px;
+		background-repeat: no-repeat;
+		background-image:url(Leo.png) ;
+
+
+</style>	
+
+</head>
+<body>
+<div></div>
+
+
+<script type="text/javascript">
+	function makeDog() {
+		let dog = document.createElement("div")
+		document.body.appendChild(dog)
+		dog.classList.add("makeDog")
+	}
+	document.addEventListener("click" , makeDog)
+
+</script>
+</body>
+</html>

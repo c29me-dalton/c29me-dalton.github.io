@@ -1,9 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-	
+    <title>Clicking Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        #button {
+            padding: 20px 40px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        #score {
+            font-size: 32px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
+
+    <h1>Clicking Game</h1>
+
+    <button id="button">Click</button>
+    <div id="score">Score: 0</div>
+
+    <script>
+        let score = 0;
+        const button = document.getElementById("button");
+        const scoreText = document.getElementById("score");
+
+        button.addEventListener("click", () => {
+            score++;
+            scoreText.textContent = "Score: " + score;
+        });
+    </script>
 
 </body>
 </html>

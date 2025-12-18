@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Box Follows Cursor</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #222;
+        }
+
+        #box {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: cyan;
+            border-radius: 8px;
+            pointer-events: none; /* Don't block mouse input */
+            transform: translate(-50%, -50%); /* Center the box on cursor */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="box"></div>
+
+    <script>
+        const box = document.getElementById("box");
+
+        // Move box with mouse
+        document.addEventListener("mousemove", function(e) {
+            box.style.left = e.clientX + "px";
+            box.style.top = e.clientY + "px";
+        });
+    </script>
+
+</body>
+</html>
