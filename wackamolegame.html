@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style type="text/css">
+		#mole{
+			width: 100px;
+			height: 100px;
+			border-radius: 50%;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_8Oi12yAQ7LBpCXg7d1dq0Urbo34sns-rXBr7HE-2SLoH29O0mHXsovk5X3ZcSvaMYm8LwVs6nwnwUF1cbrWjBt-9aJ7SAM52BflhmqJpUg&s=10);
+			position: absolute;
+			left: 100px;
+			top: 200px;
+			transition: .5s;
+		}
+	</style>
+</head>
+<body>
+<div id="mole"></div>
+
+
+<script type="text/javascript">
+
+	mole.style.width="100px"
+		mole.style.height="100px"
+
+	function movingMole (){
+		mole.style.left = Math.random()*1000+"px"
+		mole.style.top = Math.random()*1000+"px"
+	}
+	mole.addEventListener("click", function(){
+
+	})
+	setInterval(movingMole, 1000)
+
+</script>
+</body>
+</html>
