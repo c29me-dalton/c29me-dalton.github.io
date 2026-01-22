@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Geometry Dash Clone - Main Menu Fix</title>
+<style>
+body { margin:0; background:#0b0b0b; overflow:hidden; font-family:sans-serif; }
+canvas { display:block; margin:auto; background:#111; }
+#menu {
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  color:#0ff;
+}
+button {
+  background:#111; border:2px solid #0ff;
+  color:#0ff; padding:10px 20px; margin:5px;
+  font-size:16px; cursor:pointer;
+}
+button:hover { background:#0ff; color:#111; }
+#scoreboard { margin-top:20px; }
+#progress { position:absolute; top:10px; left:50%; transform:translateX(-50%); width:300px; height:8px; border:1px solid #0ff; }
+#bar { height:100%; width:0%; background:#0ff; }
+</style>
+</head>
+<body>
+<div id="menu">
+  <h1>Geometry Dash Clone</h1>
+  <div id="levelButtons"></div>
+  <div id="scoreboard"></div>
+</div>
+<canvas id="game" width="900" height="450" style="display:none;"></canvas>
+<div id="progress"><div id="bar"></div></div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+// Cube
+const cube = {x:150,y:350,s:28,dy:0,g:1};
+let gravity=0.8;
+let dead=false;
+let speed=6;
+let scroll=0;
+let levelIndex=0;
+let animReq;
+
+// Achievements / scores
+const levelScores = [0,0,0];
+let totalScore=0;
+
+// Levels
+const levels=[[],[],[]];
+function add(level,x,y,w,h,type="kill"){ levels[level].push({x,y,w,h,type,dir:1}); }
+
+// Level 1
+for(let i=600;i<15000;i+=350){
+  add(0,i,400,40,50);
+  if(i%700===0) add(0,i+150,360,30,40,"spike");
+  if(i%1400===0) add(0,i+250,320,30,30,"jump");
+  if(i%2200===0) add(0,i+300,200,40,40,"grav");
+  if(i%3000===0) add(0,i+400,300,40,40,"speed");
+  if(i%900===0) add(0,i+200,250,40,100,"move");
+}
+
+// Level 2
+for(let i=500;i<15000;i+=300){
+  add(1,i,370,30,60);
+  if(i%600===0) add(1,i+100,340,25,25,"spike");
+  if(i%1500===0) add(1,i+200,320,25,25,"jump");
+  if(i%2000===0) add(1,i+250,180,30,30,"grav");
+  if(i%3500===0) add(1,i+300,300,40,40,"speed");
+  if(i%800===0) add(1,i+150,250,30,80,"move");
+}
+
+// Level 3
+for(let i=400;i<15000;i+=250){
+  add(2,i,360,20,50);
+  if(i%500===0) add(2,i+120,330,20,20,"spike");
+  if(i%1000===0) add(2,i+200,300,20,20,"jump");
+  if(i%1800===0) add(2,i+250,150,25,25,"grav");
+  if(i%3000===0) add(2,i+350,300,25,25,"speed");
+  if(i%600===0) add(2,i+200,250,20,70,"move");
+}
+
+// Current obstacles
+let obstacles=[];
+
+// ---- MAIN MENU ----
+const menuDiv=document.getElementById("menu");
+const levelButtonsDiv=document.getElementById("levelButtons");
+const scoreboardDiv=document.getElementById("scoreboard");
+
+function updateScoreboard(){
+  let html=`<h3>Total Score: ${totalScore}</h3>`;
+  levels.forEach((_,i)=>{
+    html+=`Level ${i+1} High Score: ${levelScores[i]}<br>`;
+  });
+  scoreboardDiv.innerHTML=html;
+}
+
+function createLevelButtons(){
+  levelButtonsDiv.innerHTML="";
+  levels.forEach((_,i)=>{
+    const btn=document.createElement("button");
+    btn.textContent=`Level ${i+1}`;
+    btn.onclick=()=>startLevel(i);
+    levelButtonsDiv.appendChild(btn);
+  });
+}
+
+createLevelButtons();
+updateScoreboard();
+
+// ---- START LEVEL ----
+function startLevel(i){
+  cancelAnimationFrame(animReq); // Stop any previous loop
+  menuDiv.style.display="none";
+  canvas.style.display="block";
+  levelIndex=i;
+  cube.y=350; cube.dy=0; cube.g=1;
+  dead=false; speed=6; scroll=0;
+  obstacles=JSON.parse(JSON.stringify(levels[levelIndex]));
+  update();
+}
+
+// ---- CONTROLS ----
+document.addEventListener("keydown", e=>{
+  if(e.code==="Space"){
+    if(!dead && ((cube.g===1 && cube.y+cube.s>=canvas.height) || (cube.g===-1 && cube.y<=0))){
+      cube.dy=-15*cube.g;
+    }
+    if(dead) startLevel(levelIndex);
+  }
+});
+
+// ---- GAME LOOP ----
+const trail=[];
+function drawCubeTrail(){
+  trail.push({x:cube.x,y:cube.y});
+  if(trail.length>10) trail.shift();
+  for(let i=0;i<trail.length;i++){
+    ctx.fillStyle="rgba(0,255,255,"+(i/20)+")";
+    ctx.fillRect(trail[i].x,trail[i].y,cube.s,cube.s);
+  }
+}
+
+function drawBackground(){
+  ctx.fillStyle="#111";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="rgba(0,255,255,0.05)";
+  for(let i=0;i<canvas.width;i+=50){
+    ctx.fillRect((i+scroll*0.2)%canvas.width,canvas.height-50,25,50);
+  }
+}
+
+function update(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawBackground();
+
+  // Physics
+  cube.dy+=gravity*cube.g;
+  cube.y+=cube.dy;
+  if(cube.g===1 && cube.y+cube.s>canvas.height){ cube.y=canvas.height-cube.s; cube.dy=0; }
+  if(cube.g===-1 && cube.y<0){ cube.y=0; cube.dy=0; }
+
+  // Draw cube
+  drawCubeTrail();
+  ctx.shadowBlur=15; ctx.shadowColor="#0ff";
+  ctx.fillStyle="#0ff";
+  ctx.fillRect(cube.x,cube.y,cube.s,cube.s);
+  ctx.shadowBlur=0;
+
+  // Obstacles
+  scroll+=speed;
+  obstacles.forEach(o=>{
+    let ox=o.x-scroll;
+    if(ox<-100||ox>canvas.width+100) return;
+
+    if(o.type==="move"){ o.y+=o.dir*2; if(o.y<150||o.y>350)o.dir*=-1; }
+
+    ctx.fillStyle=o.type==="spike"?"#f00":
+                  o.type==="jump"?"#ff0":
+                  o.type==="grav"?"#0f0":
+                  o.type==="speed"?"#f0f":"#0ff";
+    ctx.fillRect(ox,o.y,o.w,o.h);
+
+    if(cube.x<ox+o.w && cube.x+cube.s>ox && cube.y<o.y+o.h && cube.y+cube.s>o.y){
+      if(o.type==="jump") cube.dy=-20*cube.g;
+      else if(o.type==="grav"){ cube.g*=-1; cube.dy=0; }
+      else if(o.type==="speed") speed=10;
+      else dead=true;
+    }
+  });
+
+  // Progress bar
+  document.getElementById("bar").style.width=Math.min((scroll/15000)*100,100)+"%";
+
+  // Update scores
+  if(scroll>levelScores[levelIndex]) levelScores[levelIndex]=scroll;
+  totalScore = levelScores.reduce((a,b)=>a+b,0);
+  updateScoreboard();
+
+  if(!dead) animReq=requestAnimationFrame(update);
+  else {
+    ctx.fillStyle="#f00"; ctx.font="40px Arial";
+    ctx.fillText("DEAD - PRESS SPACE",250,230);
+  }
+}
+</script>
+</body>
+</html>
