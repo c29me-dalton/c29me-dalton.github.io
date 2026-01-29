@@ -45,6 +45,7 @@
 <body>
 
 <script type="text/javascript">
+let friends = ["kevin", "alex", "timmy", "theo", "arjun"]
 let colors = ["red", "green", "blue"]
 function makeConfetti (){
 	let square = document.createElement("div")
@@ -64,8 +65,7 @@ let endRot = Math.random() * 90 + "deg"
 square.style.top = Math.random() * 1000 + "px"
 square.style.left = Math.random() * window.innerWidth + "px"
 square.style.transform = "rotate(" + rotation + "deg)"
-square.style.height = Math.random() * 75 + "px"
-square.style.width = Math.random () *75 + "px"
+
 
 square.style.setProperty("--startRot", startRot)
 square.style.setProperty("--endRot", endRot)
@@ -78,7 +78,10 @@ function fall(){
 
 }
 
-setInterval(makeConfetti, 50)
+// setInterval(makeConfetti, 50)
+for(let i = 0; i < 500; i++) {
+	makeConfetti() 
+}
 </script>
 
 </body>
