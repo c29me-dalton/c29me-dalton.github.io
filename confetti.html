@@ -43,10 +43,18 @@
 </style>
 </head>
 <body>
+	<button id="btn"> drop confetti</button>
+	<input type="color" value="#00254d" id="colorPicker">
+	<input type="range" min="1" max="10" step="1" value="10" id="slider">
 
 <script type="text/javascript">
+let dropConfettiBtn = document.getElementById("btn")
 let friends = ["kevin", "alex", "timmy", "theo", "arjun"]
 let colors = ["red", "green", "blue"]
+let colorPicker = document.getElementById("colorPicker")
+let slider = document.getElementById("slider")
+console.log(slider.value)
+
 function makeConfetti (){
 	let square = document.createElement("div")
 	square.classList.add("confetti")
@@ -61,7 +69,10 @@ let rotation = Math.random() * 360
 
 let startRot = Math.random() * -90 + "deg"
 let endRot = Math.random() * 90 + "deg"
+let randomColorIndex = Math.floor(Math.random() * colors. length)
+console.log(randomColorIndex)
 
+square.style.backgroundColor = colorPicker.value
 square.style.top = Math.random() * 1000 + "px"
 square.style.left = Math.random() * window.innerWidth + "px"
 square.style.transform = "rotate(" + rotation + "deg)"
@@ -77,11 +88,15 @@ function fall(){
 	setInterval (fall, 100)
 
 }
+dropConfettiBtn.addEventListener("click", function() {
+	console.log("i click it")
+	for(let i = 0; i < 500; i++) { 
+	makeConfetti() 
+	}
+makeConfetti()
 
 // setInterval(makeConfetti, 50)
-for(let i = 0; i < 500; i++) {
-	makeConfetti() 
-}
+})
 </script>
 
 </body>
