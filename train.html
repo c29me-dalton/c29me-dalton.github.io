@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>train</title>
+	<style>
+#train {
+display: flex;
+gap: 12px;
+
+}
+.cart {
+	border: 1px solid black;
+	min-width: 100px;
+	height: 80px;
+	text-align: center;
+	position: relative;
+}
+.cart:before {
+	content: "😂";
+	width: 30px;
+	height: 30px;
+	display: block;
+	border: 1px solid black;
+	border-radius: 50%;
+	position: absolute;
+	bottom: -15px;
+	left: 10px;
+	background-color: black;
+
+}
+.cart:after {
+	content: "😂";
+	width: 30px;
+	height: 30px;
+	display: block;
+	border: 1px solid black;
+	border-radius: 50%;
+	position: absolute;
+	bottom: -15px;
+	right: 10px;
+	background-color: black;
+}
+	</style>
+
+</head>
+<body>
+
+	<div id="train">
+		<div class="cart">mpj</div>
+		<div class="cart">egor</div>
+		<div class="cart">cam thomas</div>
+		<div class="cart">clax</div>
+	</div>
+	<input type="text" id="person">
+	<button id="add-person"> add person</button>
+	<button id="remove-person">remove perosn</button>
+<script>
+	let people =["egor", "mpj", "dayday"]
+	people.push("cam thomas")
+	people.push("clax")
+	people.pop()
+	console.log(people)
+
+	let addPersonBtn = document.getElementById("add-person")
+	addPersonBtn.addEventListener("click", function() {
+		let personInput = document.getElementById("person")
+		console.log(personInput.value)
+		people.push(personInput.value)
+		console.log(people)
+		})
+	let removePersonBtn = document.getElementById("remove-person")
+	removePersonBtn.addEventListener("click", function() {
+		let personInput = document.getElementById("person")
+		console.log(personInput.value)
+		people.pop(personInput.value)
+		console.log(people)
+	})
+	
+</script>
+
+</body>
+</html>
