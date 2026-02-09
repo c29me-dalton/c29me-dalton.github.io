@@ -47,34 +47,59 @@ gap: 12px;
 </head>
 <body>
 
-	<div id="train">
-		<div class="cart">mpj</div>
-		<div class="cart">egor</div>
-		<div class="cart">cam thomas</div>
-		<div class="cart">clax</div>
-	</div>
 	<input type="text" id="person">
 	<button id="add-person"> add person</button>
 	<button id="remove-person">remove perosn</button>
+
+	<div id="train">
+		<!-- <div class="cart">mpj</div>
+		<div class="cart">egor</div>
+		<div class="cart">nolan traore</div>
+		<div class="cart">clax</div> -->
+
+	</div>
+	
+
+
 <script>
-	let people =["egor", "mpj", "dayday"]
-	people.push("cam thomas")
-	people.push("clax")
-	people.pop()
-	console.log(people)
+	let people =["egor", "mpj", "dayday", "nolan traore"]
+	let train = document.getElementById("train")
+
+
+function makeTrain(){
+	//make sure to remove previous children/iteration
+	train.innerHTML = ""
+	for(let i = 0; i < people.length; i++){
+		console.log(people[i])
+	let cart=document.createElement("div")
+	cart.textContent = people[i]
+	cart.classList.add("cart")
+	train.appendChild(cart)
+
+}
+	}
+	makeTrain()
+
+	// people.push("cam thomas")
+	// people.push("clax")
+	// people.pop()
+	// console.log(people)
 
 	let addPersonBtn = document.getElementById("add-person")
 	addPersonBtn.addEventListener("click", function() {
 		let personInput = document.getElementById("person")
 		console.log(personInput.value)
 		people.push(personInput.value)
+		makeTrain()
+		personInput.value = ""
 		console.log(people)
 		})
 	let removePersonBtn = document.getElementById("remove-person")
 	removePersonBtn.addEventListener("click", function() {
 		let personInput = document.getElementById("person")
 		console.log(personInput.value)
-		people.pop(personInput.value)
+		people.pop()
+		makeTrain()
 		console.log(people)
 	})
 	
