@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Document</title>
+	
+<style>
+	#button1 {
+		position: absolute;
+	}
+
+</style>
+</head>
+<body>
+	<button id="button1">ok</button>
+	<script>
+		
+		let button1 = document.getElementById("button1")
+		console.log(button1)
+		button1.addEventListener("click", function(){
+			console.log("danny")
+			})
+
+		button1.addEventListener("mouseover", function(){
+			console.log("wolf")
+			button1.style.top = Math.random() * window. 
+				innerWidth + "px"
+			button1.style.left = Math.random() * 700 + "px"
+			button1.style.transform = "scale(-1,1)"
+		})
+
+		button1.addEventListener("mouseout", function(){
+			console.log("mouse leaves")
+			button1.style.transform = "scale(1,1)"
+			alert("dont touch me")
+		})
+		
+
+
+		
+		
+	</script>
+
+</body>
+</html>

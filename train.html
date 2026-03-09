@@ -48,6 +48,7 @@ gap: 12px;
 <body>
 
 	<input type="text" id="person">
+	<input type="color" value="#ff0000" id="colorPicker" >
 	<button id="add-person"> add person</button>
 	<button id="remove-person">remove perosn</button>
 
@@ -58,10 +59,34 @@ gap: 12px;
 		<div class="cart">clax</div> -->
 
 	</div>
-	
-
 
 <script>
+let alex = {
+	name: "Matthew",
+	studentId: "c29me"
+	fav_color: "blue"
+
+
+}
+
+let timmy = {
+	name: "timmy"
+	studentId: "c29tc"
+	fav_color: "red"
+}
+
+
+let dalton = {
+	year: 1919,
+	studentNum: 500,
+}
+
+let people = [
+	alex,
+	timmy,
+	{name: "kevin", studentId: "c29ks", fav_color: "green"}
+
+]
 	let people =["egor", "mpj", "dayday", "nolan traore"]
 	let train = document.getElementById("train")
 
@@ -72,7 +97,8 @@ function makeTrain(){
 	for(let i = 0; i < people.length; i++){
 		console.log(people[i])
 	let cart=document.createElement("div")
-	cart.textContent = people[i]
+	cart.textContent = people[i].className
+	cart.style.backgroundColor = people[i]. fav_color
 	cart.classList.add("cart")
 	train.appendChild(cart)
 

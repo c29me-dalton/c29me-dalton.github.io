@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cookie Clicker Advanced</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f3e5d0;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 { font-size: 40px; margin-bottom: 5px; }
+  #cookie {
+    width: 220px;
+    height: 220px;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  #cookie:active { transform: scale(0.93); }
+
+  .panel {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px auto;
+    width: 450px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
+  }
+  button {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+    background: #d1904b;
+    color: white;
+    font-size: 16px;
+  }
+  button:hover { background: #b3753c; }
+  .msg {
+    position: absolute;
+    font-size: 20px;
+    color: #8b4513;
+    pointer-events: none;
+    animation: floatUp 1s ease-out;
+  }
+  @keyframes floatUp {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-40px); }
+  }
+  #goldenCookie {
+    position: absolute;
+    width: 80px;
+    display: none;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<h1>Cookie Clicker+</h1>
+
+<img id="cookie"
+src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Emoji_u1f36a.svg">
+
+<h2 id="count">Cookies: 0</h2>
+<h3 id="cps">CPS: 0</h3>
+
+<img id="goldenCookie" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Emoji_u1f36a.svg/120px-Emoji_u1f36a.svg.png">
+
+<div class="panel">
+  <h2>Buildings</h2>
+  <div id="shop"></div>
+</div>
+
+<div class="panel">
+  <h2>Achievements</h2>
+  <div id="achList"></div>
+</div>
+
+<script>
+let cookies = 0;
+let totalClicks = 0;
+
+const buildings = [
+  {name:"Cursor",        base:15,   cps:1,  amount:0},
+  {name:"Grandma",       base:100,  cps:5,  amount:0},
+  {name:"Farm",          base:500,  cps:15, amount:0},
+  {name:"Factory",       base:3000, cps:40, amount:0},
+  {name:"Mine",          base:10000,cps:100,amount:0},
+  {name:"Bank",          base:50000,cps:250,amount:0},
+  {name:"Temple",        base:200000,cps:600,amount:0},
+  {name:"Wizard Tower",  base:800000,cps:1500,amount:0},
+  {name:"Shipment",      base:3000000,cps:5000,amount:0},
+  {name:"Alchemy Lab",   base:10000000,cps:15000,amount:0}
+];
+
+function cost(base, amount) {
+  return Math.floor(base * Math.pow(1.15, amount));
+}
+
+function updateShop() {
+  let s = "";
+  buildings.forEach((b,i)=>{
+    s += `<button onclick="buy(${i})">
+      ${b.name} (${b.amount}) — CPS: ${b.cps} — Cost: ${cost(b.base,b.amount)}
+    </button>`;
+  });
+  document.getElementById("shop").innerHTML = s;
+}
+
+function getCPS() {
+  return buildings.reduce((t,b)=> t + b.amount*b.cps, 0);
+}
+
+document.getElementById("cookie").onclick = () => {
+  cookies += 1;
+  totalClicks++;
+  floatText("+1");
+  checkAchievements();
+};
+
+function buy(i) {
+  let c = cost(buildings[i].base, buildings[i].amount);
+  if (cookies >= c) {
+    cookies -= c;
+    buildings[i].amount++;
+    updateShop();
+    save();
+    checkAchievements();
+  }
+}
+
+function floatText(txt) {
+  const d = document.createElement("div");
+  d.className = "msg";
+  d.innerHTML = txt;
+  d.style.left = (window.innerWidth/2 - 20) + "px";
+  d.style.top = "200px";
+  document.body.appendChild(d);
+  setTimeout(()=> d.remove(), 1000);
+}
+
+setInterval(()=>{
+  cookies += getCPS()/10;
+  document.getElementById("count").innerHTML = "Cookies: " + Math.floor(cookies);
+  document.getElementById("cps").innerHTML = "CPS: " + getCPS();
+},100);
+
+/// Golden Cookie System
+const golden = document.getElementById("goldenCookie");
+
+function spawnGoldenCookie() {
+  if (Math.random() < 0.2) {      // 20% chance each cycle
+    golden.style.display = "block";
+    golden.style.left = Math.random()* (window.innerWidth-100) + "px";
+    golden.style.top = Math.random()* (window.innerHeight-200)+ "px";
+  }
+}
+setInterval(spawnGoldenCookie, 8000);
+
+golden.onclick = () => {
+  golden.style.display = "none";
+
+  if (Math.random() < 0.5) {
+    // Frenzy (double CPS for 10s)
+    let old = buildings.map(b=>b.cps);
+    buildings.forEach(b=> b.cps*=2);
+    floatText("FRENZY!");
+    setTimeout(()=>{
+      buildings.forEach((b,i)=> b.cps = old[i]);
+    },10000);
+  } else {
+    // Lucky cookies — big cookies instantly
+    let add = Math.floor(cookies * 0.1 + 50);
+    cookies += add;
+    floatText("+"+add);
+  }
+  save();
+};
+
+/// Achievements
+const achievements = [
+  {id:"click10", text:"Click 10 times", check:()=> totalClicks>=10},
+  {id:"click100",text:"Click 100 times", check:()=> totalClicks>=100},
+  {id:"1k", text:"Have 1,000 cookies", check:()=> cookies>=1000},
+  {id:"10k",text:"10,000 cookies", check:()=> cookies>=10000},
+  {id:"cursor10",text:"Own 10 cursors", check:()=> buildings[0].amount>=10},
+  {id:"grandma10",text:"Own 10 grandmas", check:()=> buildings[1].amount>=10},
+  {id:"bank5", text:"Own 5 banks", check:()=> buildings[5].amount>=5},
+  {id:"wizard3",text:"Own 3 wizard towers", check:()=> buildings[7].amount>=3},
+  {id:"rich",text:"Have 100,000 cookies", check:()=> cookies>=100000},
+  {id:"million",text:"1,000,000 cookies", check:()=> cookies>=1000000}
+];
+
+let unlocked = {};
+
+function checkAchievements() {
+  achievements.forEach(a=>{
+    if (!unlocked[a.id] && a.check()) {
+      unlocked[a.id] = true;
+      showAch(a.text);
+      save();
+    }
+  });
+
+  let list = "";
+  for (let id in unlocked)
+    list += "🏆 " + achievements.find(a=>a.id==id).text + "<br>";
+  document.getElementById("achList").innerHTML = list;
+}
+
+function showAch(text) {
+  floatText("Achievement: " + text);
+}
+
+/// Save / Load
+function save() {
+  localStorage.setItem("save", JSON.stringify({
+    cookies, buildings, unlocked, totalClicks
+  }));
+}
+function load() {
+  let s = localStorage.getItem("save");
+  if (!s) return;
+  let data = JSON.parse(s);
+
+  cookies = data.cookies;
+  totalClicks = data.totalClicks;
+  unlocked = data.unlocked || {};
+
+  data.buildings.forEach((b,i)=>{
+    buildings[i].amount = b.amount;
+  });
+
+  updateShop();
+  checkAchievements();
+}
+
+updateShop();
+load();
+
+</script>
+</body>
+</html>
