@@ -61,32 +61,9 @@ gap: 12px;
 	</div>
 
 <script>
-let alex = {
-	name: "Matthew",
-	studentId: "c29me"
-	fav_color: "blue"
 
 
-}
 
-let timmy = {
-	name: "timmy"
-	studentId: "c29tc"
-	fav_color: "red"
-}
-
-
-let dalton = {
-	year: 1919,
-	studentNum: 500,
-}
-
-let people = [
-	alex,
-	timmy,
-	{name: "kevin", studentId: "c29ks", fav_color: "green"}
-
-]
 	let people =["egor", "mpj", "dayday", "nolan traore"]
 	let train = document.getElementById("train")
 
@@ -98,7 +75,6 @@ function makeTrain(){
 		console.log(people[i])
 	let cart=document.createElement("div")
 	cart.textContent = people[i].className
-	cart.style.backgroundColor = people[i]. fav_color
 	cart.classList.add("cart")
 	train.appendChild(cart)
 
@@ -119,6 +95,7 @@ function makeTrain(){
 		makeTrain()
 		personInput.value = ""
 		console.log(people)
+		name:
 		})
 	let removePersonBtn = document.getElementById("remove-person")
 	removePersonBtn.addEventListener("click", function() {
