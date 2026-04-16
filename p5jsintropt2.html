@@ -9,17 +9,38 @@
 <body>
 	<script>
 		function setup(){
-			createCanvas(2000,2000)
+			createCanvas(1000,1000);
 
 		}
+		push()
+		translate(x, y)
+		rotate(frameCount * 0.05)
 			function draw(){
-			background(200)
+			background(200);
+
+			fill("7B3F00")
 			for(let i = 0; i < 11; i++){
 				for(let j = 0; j < 11; j++){
-				let x = i * 100
-				let y = j * 100
-			circle(x, y, 100)
-			text(i + ","+ j, x, y)
+				let x = i * 100;
+				let y = j * 100;
+				
+
+				fill("#6E260E");
+
+
+			ellipse(0-30, 0-50, 30);
+			ellipse(0+30, 0-50, 30);
+			fill("#7B3F00");
+
+			circle(0-130, 0-130, 30);
+			circle(0-70, 0-130, 30);
+			circle(0-100, 0-100, 30);
+			circle(0, 0, 100);
+
+			fill("#121212");
+			arc(0 + 10, 0 + 20, 15, 0);
+			//te0t(i + ","+ j, 0, y)
+			pop()
 		}
 		}
 			
