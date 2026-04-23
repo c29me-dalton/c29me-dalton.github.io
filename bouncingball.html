@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<script src="https://cdn.jsdelivr.net/npm/p5@1.11.13/lib/p5.min.js"></script>
+</head>
+<body>
+	<script>
+		let xpos
+		let ypos
+		let xspeed
+		let yspeed
+		let d = 50
+		let fillColor = "blue"
+		function setup() {
+			createCanvas(300,300)
+			xpos = width/2
+			ypos = height/2
+			xspeed = 20
+			yspeed = 20
+
+		}
+
+		function draw(){
+			background(200)
+
+			d = getRandomDiameter(10, 100)
+
+			if (xpos + d/2 > width || xpos + d/2 < 0) {
+				xspeed *= -1
+			}
+			if (ypos + d/2 > height || ypos + d/2 < 0) {
+				yspeed = yspeed * -1
+			}
+
+			fill(fillColor)
+		changeBallColor("blue")
+			
+			xpos += xspeed
+			ypos += yspeed
+
+			fill(fillColor)
+			circle(xpos, ypos, d)
+		}
+
+		function getRandomDiameter (minSize, maxSize) {
+			let randomDiameter = random(minSize,maxSize)
+			return randomDiameter
+		}
+
+		function changeBallColor (topRightColor, bottomRightColor, topLeftColor, bottomLeftColor) {
+			if (xpos > width/2 && ypos < height/2) { // top right
+				fillColor = "#3185FC"
+			} else if (xpos > width/2 && ypos > height/2){ // bottom right
+				fillColor = "#E84855"
+			} else if (xpos < width/2 && ypos > height/2){ // top left
+				fillColor = "#yellow"
+			} else { // bottom left
+				fillColor = "red"
+			}
+		}
+	</script>
+
+</body>
+</html>
